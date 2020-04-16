@@ -1,0 +1,109 @@
+{% extends 'shuyuadmin/table_obj_index.html' %}
+{% load tags %}
+
+{% block page-head %}
+    <li><a href="">{% get_table_name2 app_name table_name %}</a></li>
+{% endblock %}
+
+{% block search %}
+            {% if admin_class.search_fields %}
+                <div class="row pad-ver">
+                    <form action="" method="get" class="col-xs-12 col-sm-10 col-sm-offset-1 pad-hor">
+                        <div class="input-group mar-btm">
+                             <input type="text" placeholder="输入{% get_search_filter_filed_name admin_class %}进行查询" class="form-control input-small" name="q" value="{% get_search_filter_filed_value admin_class.filter_conditions %}">
+                             <span class="input-group-btn">
+                                 <button class="btn btn-primary btn-small" type="submit">查询</button>
+                             </span>
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
+{% endblock %}
+
+{% block page-content %}
+    <!--Page content-->
+    <!--===================================================-->
+    <div id="page-content">
+
+					    <div class="panel">
+					        <div class="panel-body">
+                                {% for field in admin_class.list_filter %}
+                                    <div class="pad-hor mar-top">
+                                       <button class="btn btn-primary btn-labeled">{% get_list_filter_title admin_class field %}</button>
+                                        {% get_list_filter_options admin_class field %}
+                                    </div>
+                                {% endfor %}
+
+                                {% if admin_class.list_filter %}
+                                    <div class="row pull-right"><a class="btn btn-sm btn-default" href="/shuyuadmin/{{ app_name }}/{{ table_name }}">重置条件</a></div>
+                                    <hr>
+                                {% endif %}
+                                <div class="pad-btm form-inline">
+                                                <div class="row">
+                                                    <div class="col-sm-6 table-toolbar-left">
+                                                        <button class="btn btn-purple"><i class="demo-pli-add icon-fw"></i>添加</button>
+                                                    </div>
+                                                </div>
+                                </div>
+
+
+                                <div class="table-responsive">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            {% for cloumn in admin_class.list_display %}
+                                                            <th>{{ cloumn }}</th>
+                                                            {% endfor %}
+                                                            <th class="text-right"></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for obj in page_data.page %}
+                                                            <tr>
+                                                                {% get_row_data obj admin_class %}
+                                                                <td class="text-right">
+                                                                    <div class="btn-group">
+                                                                        <a class="btn btn-sm btn-default btn-hover-info demo-pli-information add-tooltip" href="#" data-original-title="查看" data-container="body"></a>
+                                                                        <a class="btn btn-sm btn-default btn-hover-success demo-psi-pen-5 add-tooltip" href="#" data-original-title="编辑" data-container="body"></a>
+                                                                        <a class="btn btn-sm btn-default btn-hover-danger demo-pli-trash add-tooltip" href="#" data-original-title="删除" data-container="body"></a>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+
+                                <hr>
+					            <!--Pagination-->
+                                <div class="text-center">
+                                                <ul class="pagination text-nowrap mar-no">
+                                                    <li class="page-number"><a href="?page=1{% get_filter_conditions_url admin_class %}">首页</a></li>
+                                                    <li class="page-pre">
+                                                        <a href="?page={{ page_data.page_previous }}{% get_filter_conditions_url admin_class %}">&lt;</a>
+                                                    </li>
+                                                    {% for i in  page_data.dis_range %}
+                                                        {% if i == page_data.page_num %}
+                                                            <li class="page-number active"><a href="?page={{ i }}{% get_filter_conditions_url admin_class %}">{{i}}</a></li>
+                                                        {% else %}
+                                                            <li class="page-number"><a href="?page={{ i }}{% get_filter_conditions_url admin_class %}">{{i}}</a></li>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    <li class="page-next">
+                                                        <a href="?page={{ page_data.page_next }}{% get_filter_conditions_url admin_class %}">&gt;</a>
+                                                    </li>
+                                                    <li class="page-number"><a href="?page={{ page_data.paginator.num_pages }}{% get_filter_conditions_url admin_class %}">尾页</a></li>
+                                                </ul>
+                                            </div>
+
+					        </div>
+					    </div>
+
+
+
+                </div>
+    <!--===================================================-->
+    <!--End page content-->
+{% endblock %}
+
